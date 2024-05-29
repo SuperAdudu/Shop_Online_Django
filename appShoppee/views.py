@@ -5,6 +5,12 @@ import json
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .serializers import *
+from rest_framework.parsers import FormParser, MultiPartParser
 # Create your views here.
 
 
@@ -167,3 +173,25 @@ def updateItem(request):
 
 def information(request):
     return render(request,'appShop/information.html')
+
+
+
+class GetAllProduct(APIView):
+    
+    def get(self, request):
+        products = Product.objects.all()
+        productData = GetAllProductSerializer(products,many=True)
+        return Response(data=productData.data)
+    
+class GetProductWithSearch(APIView):
+
+    parser_classes = [FormParser, MultiPartParser]
+    def get(self, request, format=None):
+        name = request.data.get('name', '')
+        if name:
+            products = Product.objects.filter(name__icontains=name)
+        else:
+            products = Product.objects.all()
+
+        productData = GetAllProductSerializer(products,many=True)
+        return Response(data=productData.data)

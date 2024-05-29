@@ -13,5 +13,8 @@ urlpatterns = [
     path('category/',views.category,name='category' ),
     path('detail/',views.detail,name='detail'),
     path('information/',views.information,name='information'),
+    
+    path('getAllProduct/',views.GetAllProduct.as_view()),
+    path('getProductWithSearch/',views.GetProductWithSearch.as_view()),
 ]
 
